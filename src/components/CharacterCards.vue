@@ -8,19 +8,10 @@
       <button class="btn bg-orange-500" @click="setOrderKey('id')">Id</button>
     </div>
     <div class="m-auto container flex flex-wrap mt-10">
-      <div
-        v-for="character in charactersOrdered"
-        :key="character.id"
-        class="xl:w-1/5 lg:w-1/4 md:w-1/3 w-1/2 card"
-      >
+      <div v-for="character in charactersOrdered" :key="character.id" class="xl:w-1/5 lg:w-1/4 md:w-1/3 w-1/2 card">
         <div class="card-inner">
           <div class="image">
-            <img
-              :src="character.image"
-              class="bg-gray-200"
-              height="300"
-              width="300"
-            />
+            <img :src="character.image" class="bg-gray-200" height="300" width="300" />
           </div>
           <div class="content text-center mt-5">
             <span class="header text-xl">{{ character.name }}</span>
@@ -41,14 +32,25 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import axios from "axios";
 import orderBy from "lodash/orderby";
 export default {
-  data() {
+  setup() {
+    const characters = ref([]);
+    const loadingState = ref("");
+    const orderKey = ref("id");
+    const fetchAllCharacters = async () => {
+      loadingState.value = "loading";
+      const response = await axios.get("https://rickandmortyapi.com/api/character/");
+      characters.value = response.data.results;
+      loadingState.value = "success";
+    };
     return {
-      characters: [],
-      loadingState: null,
-      orderKey: "id",
+      characters,
+      loadingState,
+      orderKey,
+      fetchAllCharacters
     };
   },
   computed: {
@@ -59,17 +61,6 @@ export default {
   methods: {
     setOrderKey(key) {
       this.orderKey = key;
-    },
-    fetchAllCharacters() {
-      this.loadingState = "loading";
-      axios
-        .get("https://rickandmortyapi.com/api/character")
-        .then((response) => {
-          setTimeout(() => {
-            this.loadingState = "success";
-            this.characters = response.data.results;
-          }, 1000);
-        });
     },
   },
   created() {
@@ -82,14 +73,17 @@ export default {
 .btn {
   @apply px-6 py-1 text-white rounded;
 }
+
 .card-inner {
   @apply p-4 shadow-md rounded m-2;
 }
+
 .card-inner img {
   @apply rounded;
   max-width: auto;
   display: block;
 }
+
 .loading {
   @apply fixed top-0 left-0 right-0 bottom-0 bg-white flex justify-center items-center;
 }
