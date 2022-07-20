@@ -33,3 +33,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Links
+
+- [Exercises](https://vueschool.notion.site/Exercises-d0f485e569464b949c081208df12b3d9), Vue Composition API.
