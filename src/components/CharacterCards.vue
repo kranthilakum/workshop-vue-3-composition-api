@@ -32,6 +32,10 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
+import axios from "axios";
+import orderBy from "lodash/orderby";
+
 const characters = ref([]);
 const loadingState = ref("");
 const orderKey = ref("id");
@@ -42,24 +46,14 @@ const fetchAllCharacters = async () => {
   loadingState.value = "success";
 };
 fetchAllCharacters();
-</script>
 
-<script>
-import { ref } from 'vue';
-import axios from "axios";
-import orderBy from "lodash/orderby";
-export default {
-  computed: {
-    charactersOrdered() {
-      return orderBy(this.characters, this.orderKey);
-    },
-  },
-  methods: {
-    setOrderKey(key) {
-      this.orderKey = key;
-    },
-  }
-};
+const charactersOrdered = computed(() =>
+  orderBy(characters.value, orderKey.value)
+);
+
+const setOrderKey = (key) => {
+  orderKey.value = key;
+}
 </script>
 
 <style scoped>
