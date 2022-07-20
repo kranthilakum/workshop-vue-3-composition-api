@@ -24,6 +24,14 @@
       </div>
     </div>
 
+    <div class="m-auto container flex flex-wrap mt-10">
+      <ul>
+        <li v-for="location in locationsOrdered" :key="location.id">
+          {{ location.name }} - {{ location.type }} - {{ location.dimension }}
+        </li>
+      </ul>
+    </div>
+
     <div v-if="loadingState === 'loading'" class="loading">
       <span class="text-gray-500">Loading characters...</span>
       <img src="/spinner.svg" alt="loading" />
@@ -32,9 +40,13 @@
 </template>
 
 <script setup>
-import { useFetchAllCharacters } from "@/composables/useFetchAllCharacters";
-const { loadingState, charactersOrdered, fetchAllCharacters, setOrderKey } = useFetchAllCharacters("https://rickandmortyapi.com/api/character/");
+import { useFetchResource } from "@/composables/useFetchResource";
+
+const locationUrl = "https://rickandmortyapi.com/api/location/";
+const characterUrl = "https://rickandmortyapi.com/api/character/";
+const { locationsOrdered, loadingState, charactersOrdered, fetchAllCharacters, fetchLocations, setOrderKey } = useFetchResource(characterUrl, locationUrl);
 fetchAllCharacters();
+fetchLocations();
 </script>
 
 <style scoped>
