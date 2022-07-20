@@ -32,7 +32,7 @@
       </ul>
     </div>
 
-    <div v-if="loadingState === 'loading'" class="loading">
+    <div v-if="loadingState === 'loading' || loadingLocations === 'loading'" class="loading">
       <span class="text-gray-500">Loading characters...</span>
       <img src="/spinner.svg" alt="loading" />
     </div>
@@ -41,12 +41,22 @@
 
 <script setup>
 import { useFetchResource } from "@/composables/useFetchResource";
+import { useGlobalEvent } from "@/composables/useGlobalEvent";
 
 const locationUrl = "https://rickandmortyapi.com/api/location/";
 const characterUrl = "https://rickandmortyapi.com/api/character/";
-const { locationsOrdered, loadingState, charactersOrdered, fetchAllCharacters, fetchLocations, setOrderKey } = useFetchResource(characterUrl, locationUrl);
+const {
+  characters,
+  locationsOrdered,
+  loadingLocations,
+  loadingState,
+  charactersOrdered,
+  fetchAllCharacters,
+  fetchLocations,
+  setOrderKey } = useFetchResource(characterUrl, locationUrl);
 fetchAllCharacters();
 fetchLocations();
+useGlobalEvent('click', () => characters.value.shift());
 </script>
 
 <style scoped>
