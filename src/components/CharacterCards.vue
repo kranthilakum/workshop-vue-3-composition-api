@@ -32,28 +32,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import axios from "axios";
-import orderBy from "lodash/orderby";
-
-const characters = ref([]);
-const loadingState = ref("");
-const orderKey = ref("id");
-const fetchAllCharacters = async () => {
-  loadingState.value = "loading";
-  const response = await axios.get("https://rickandmortyapi.com/api/character/");
-  characters.value = response.data.results;
-  loadingState.value = "success";
-};
+import { useFetchAllCharacters } from "@/composables/useFetchAllCharacters";
+const { loadingState, charactersOrdered, fetchAllCharacters, setOrderKey } = useFetchAllCharacters("https://rickandmortyapi.com/api/character/");
 fetchAllCharacters();
-
-const charactersOrdered = computed(() =>
-  orderBy(characters.value, orderKey.value)
-);
-
-const setOrderKey = (key) => {
-  orderKey.value = key;
-}
 </script>
 
 <style scoped>
